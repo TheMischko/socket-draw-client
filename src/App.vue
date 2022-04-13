@@ -1,19 +1,31 @@
 <template>
-  <MainCanvas ref="canvas" @canvas-click="onCanvasClick" @canvas-draw="onCanvasDraw" :settings="drawSettings"/>
-  <DrawingSettings @settings-changed="onSettingsChange"/>
-  <div>Active user count: <span ref="userCountText">1</span></div>
+  <OverlayWrapper>
+    <template v-slot:top-content>
+      <h1>Sketch.io</h1>
+      <div>Active user count: <span ref="userCountText">1</span></div>
+    </template>
+    <template v-slot:center-content>
+      <MainCanvas ref="canvas" @canvas-click="onCanvasClick" @canvas-draw="onCanvasDraw" :settings="drawSettings"/>
+    </template>
+    <template v-slot:left-content>
+      <DrawingSettings @settings-changed="onSettingsChange"/>
+    </template>
+  </OverlayWrapper>
+
 </template>
 
 <script>
 import MainCanvas from "@/components/MainCanvas";
 import DrawingSettings from "@/components/DrawingSettings/DrawingSettings";
+import OverlayWrapper from "@/assets/UI/OverlayWrapper";
 import config from "@/config";
 
 export default {
   name: 'App',
   components: {
     MainCanvas,
-    DrawingSettings
+    DrawingSettings,
+    OverlayWrapper
   },
   data: function () {
     return {
@@ -79,7 +91,9 @@ export default {
 
 <style>
 body{
-  background: lightblue;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

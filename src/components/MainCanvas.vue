@@ -1,15 +1,23 @@
 <style>
 canvas{
+  margin: auto;
   width: 800px;
   height: 600px;
   border: 1px solid lightblue;
   border-radius: 3px;
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✏️</text></svg>") 4 26, auto;
 }
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 
 <template>
-  <canvas @click="canvasClick" @mousedown="drawStart"></canvas>
+  <div class="center">
+    <canvas @click="canvasClick" @mousedown="drawStart"></canvas>
+  </div>
 </template>
 
 <script>

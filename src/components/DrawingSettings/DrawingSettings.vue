@@ -1,9 +1,15 @@
 <style>
   .drawing-settings{
-    min-width: 250px;
+    width: 250px;
   }
   .settings-row{
     margin: 0.5rem 0;
+  }
+  .row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
   label{
     display: block;
@@ -36,18 +42,16 @@
   <CardWrapper>
     <div class="drawing-settings noselect">
       <div class="settings-row">
-        <label>Brush size:</label>
+        <label>Brush size: <span ref="brushSizeText">?</span> px</label>
         <input type="range" min="1" max="100" value="5" class="slider" ref="brushSizeInput" @change="onChange">
-        <div class="value"><span ref="brushSizeText">?</span> px</div>
       </div>
       <div class="settings-row">
         <label>Brush type:</label>
         <BrushRadioGroup ref="brushRadioGroup" @value-changed="onChange"/>
       </div>
-      <div class="settings-row">
+      <div class="settings-row row">
         <label>Color:</label>
-        <input type="color" class="color-picker" ref="colorInput" @change="onChange">
-        <div class="value"><span ref="colorInputText">?</span></div>
+        <ColorPicker ref="colorInput" @value-changed="onChange"></ColorPicker>
       </div>
     </div>
   </CardWrapper>
@@ -56,10 +60,11 @@
 <script>
 import CardWrapper from "@/assets/UI/CardWrapper";
 import BrushRadioGroup from "@/assets/Form/BrushRadioGroup";
+import ColorPicker from "@/assets/Form/ColorPicker";
 
 export default {
   name: "DrawingSettings",
-  components: {CardWrapper, BrushRadioGroup},
+  components: {CardWrapper, BrushRadioGroup, ColorPicker},
   data(){
     return {
       settings: {},
@@ -76,14 +81,12 @@ export default {
       this.settings = {
         brushSize: this.$refs.brushSizeInput.value,
         brushType: this.$refs.brushRadioGroup.getValue(),
-        color: this.$refs.colorInput.value
+        color: this.$refs.colorInput.getValue()
       }
 
       console.log(this.settings);
 
-      this.$refs.brushSizeText.innerText = this.settings.brushSize
-      this.$refs.colorInputText.innerText = this.settings.color
-
+      this.$refs.brushSizeText.innerText = this.settings.brushSize;
       this.$emit('settings-changed', this.settings);
     }
   }
