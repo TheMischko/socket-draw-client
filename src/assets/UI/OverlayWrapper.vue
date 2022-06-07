@@ -44,6 +44,7 @@ export default {
   grid-row-start: 2;
   grid-row-end: 3;
   margin: 0 0 0 auto;
+  padding-top: 100px;
 }
 .right{
   grid-column-start: 3;

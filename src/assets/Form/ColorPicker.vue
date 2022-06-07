@@ -32,12 +32,12 @@ export default {
     },
     onInputChange(){
       this.color1 = this.$refs.input.value;
+      this.$emit("value-changed", this.color1);
     },
     switchColors(){
       const tmp = this.color2;
       this.color2 = this.color1;
       this.color1 = tmp;
-      console.log(this.$refs.secondColorDiv);
       this.$refs.secondColorDiv.style.backgroundColor = this.color2;
     }
   }

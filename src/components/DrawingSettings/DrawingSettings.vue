@@ -84,8 +84,6 @@ export default {
         color: this.$refs.colorInput.getValue()
       }
 
-      console.log(this.settings);
-
       this.$refs.brushSizeText.innerText = this.settings.brushSize;
       this.$emit('settings-changed', this.settings);
     }

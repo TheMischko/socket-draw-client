@@ -1,5 +1,5 @@
 <template>
-  <OverlayWrapper>
+<OverlayWrapper>
     <template v-slot:top-content>
       <h1>Sketch.io</h1>
       <div>Active user count: <span ref="userCountText">1</span></div>
@@ -11,21 +11,22 @@
       <DrawingSettings @settings-changed="onSettingsChange"/>
     </template>
   </OverlayWrapper>
-
+  <LoginModal />
 </template>
 
 <script>
 import MainCanvas from "@/components/MainCanvas";
 import DrawingSettings from "@/components/DrawingSettings/DrawingSettings";
 import OverlayWrapper from "@/assets/UI/OverlayWrapper";
+import LoginModal from './components/LoginModal/LoginModal';
 import config from "@/config";
-
 export default {
   name: 'App',
   components: {
     MainCanvas,
     DrawingSettings,
-    OverlayWrapper
+    OverlayWrapper,
+    LoginModal
   },
   data: function () {
     return {
@@ -47,7 +48,6 @@ export default {
         console.log(ex);
       }
     }
-
     this.connection.onopen = function(event) {
       console.log(event)
       console.log("Successfully connected to the websocket server...")
@@ -83,28 +83,51 @@ export default {
       image.onload = () => {
         this.$refs.canvas.drawInitialImage(image);
       };
-
     }
   }
 }
 </script>
 
-<style>
-body{
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+<style lang="css">
+@font-face {
+  font-family: Bebas;
+  src: url("../public/fonts/Bebas-Regular.otf");
 }
-#app {
+
+h1{
+  display: block;
+  width: 100%;
+
+  text-align: center;
+
+  font-family: Bebas;
+  font-size: 64px;
+  
+}
+
+button{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  padding: 0.5em;
+  margin: 0.5em;
+
+  border: 2px solid black;
+  box-shadow: 5px 5px black;
+
+  cursor: pointer;
+  font-weight: bold;
+}
+
+form{
+  margin-bottom: 1em;
+}
+
+html {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+}
+*{
+  font-size: 20px;
 }
 </style>
