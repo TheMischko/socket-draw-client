@@ -11,21 +11,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import ModalComponent from '../UI/Modal/ModalComponent';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 
 const isModalOpen = ref(true);
 const activePage = ref("loginPage");
+const emits = defineEmits(["accessTokenAcquired"]);
 
 const changePage = (page) => {
     activePage.value = page;
 }
 
 const tokenAcquired = (token) => {
-    console.log(token);
     isModalOpen.value = false;
+    emits("accessTokenAcquired", token);
 }
 
 </script>

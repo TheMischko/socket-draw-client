@@ -2,6 +2,7 @@
 <OverlayWrapper>
     <template v-slot:top-content>
       <h1>Sketch.io</h1>
+      <div v-if="user !== null">Welcome {{ user.login.replace(/^\w/, c => c.toUpperCase()) }}</div>
       <div>Active user count: <span ref="userCountText">1</span></div>
     </template>
     <template v-slot:center-content>
@@ -11,7 +12,7 @@
       <DrawingSettings @settings-changed="onSettingsChange"/>
     </template>
   </OverlayWrapper>
-  <LoginModal />
+  <LoginModal @access-token-acquired="tokenAcquired"/>
 </template>
 
 <script>
@@ -22,19 +23,26 @@ import LoginModal from './components/LoginModal/LoginModal';
 import config from "@/config";
 export default {
   name: 'App',
+
   components: {
     MainCanvas,
     DrawingSettings,
     OverlayWrapper,
     LoginModal
   },
+
   data: function () {
     return {
+      accessToken: "",
       /** @type {WebSocket} */
       connection: null,
-      drawSettings: {}
+      drawSettings: {
+        canDraw: false
+      },
+      user: null
     }
   },
+
   created: function() {
     console.log(`Starting connection to WebSocket Server ws://${config.hostAddress}`);
     this.connection = new WebSocket(`ws://${config.hostAddress}`);
@@ -53,6 +61,7 @@ export default {
       console.log("Successfully connected to the websocket server...")
     }
   },
+
   methods: {
     onCanvasClick(pos){
       this.connection.send(JSON.stringify({
@@ -62,27 +71,54 @@ export default {
         }
       }));
     },
+
     onSettingsChange(settings){
+      const canDraw = this.drawSettings.canDraw;
       this.drawSettings = settings;
+      this.drawSettings.canDraw = canDraw;
     },
+
     onCanvasDraw(data){
       this.connection.send(JSON.stringify({
         event: "draw",
+        bearer: this.accessToken,
         data: data
       }));
     },
+
+    handshake({status, user, token}){
+      if(status === "invalid"){
+        //TO-DO wrong login handler
+        return
+      }
+      this.drawSettings.canDraw = true;
+      this.user = user;
+      this.accessToken = token;
+    },
+
     usersChanged({userCount}){
       this.$refs.userCountText.innerText = userCount;
     },
+
     draw(drawData){
       this.$refs.canvas.drawForeign(drawData);
     },
+
     imageInit(){
       const image = new Image();
       image.src = `http://${config.hostAddress}/canvas.png`;
       image.onload = () => {
         this.$refs.canvas.drawInitialImage(image);
       };
+    },
+
+    tokenAcquired(token){
+      this.connection.send(JSON.stringify({
+        event: "initialize",
+        data: {
+          token
+        }
+      }));
     }
   }
 }
