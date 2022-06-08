@@ -1,8 +1,8 @@
 <style>
 canvas{
   margin: auto;
-  width: 800px;
-  height: 600px;
+  width: 1920px;
+  height: 980px;
   border-radius: 3px;
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>✏️</text></svg>") 4 26, auto;
   box-shadow: 5px 5px 4px 4px rgba(0,0,0,0.33);
@@ -17,7 +17,7 @@ canvas{
 </style>
 
 <template>
-  <div class="center">
+  <div>
     <canvas @click="canvasClick" @mousedown="drawStart" ref="canvas"></canvas>
   </div>
 </template>
@@ -63,10 +63,12 @@ export default {
       this.$el.removeEventListener("mousemove", this.draw);
     },
     resize(){
-      this.ctx.canvas.width = 800;
-      this.ctx.canvas.height = 600;
+      this.ctx.canvas.width = 1920;
+      this.ctx.canvas.height = 980;
     },
     reposition(event) {
+      console.log(event.clientX , this.$el.offsetLeft);
+      console.log(event.clientY, this.$el.offsetTop);
       this.coord.x = event.clientX - this.$el.offsetLeft;
       this.coord.y = event.clientY - this.$el.offsetTop;
     },
@@ -111,7 +113,7 @@ export default {
      */
     drawInitialImage(image) {
       void(image);
-      this.ctx.drawImage(image, 0, 0, 800, 600);
+      this.ctx.drawImage(image, 0, 0, 1920, 980);
     }
   }
 }

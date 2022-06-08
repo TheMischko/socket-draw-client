@@ -3,65 +3,74 @@
   <div class="top">
     <slot name="top-content"></slot>
   </div>
-  <div class="left">
+  <div ref="leftBar" class="left" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
     <slot name="left-content"></slot>
   </div>
-  <div class="center">
-    <slot name="center-content"></slot>
-  </div>
-  <div class="right">
-    <slot name="right-content"></slot>
-  </div>
-  <div class="bottom">
-    <slot name="bottom-content"></slot>
+  <div class="main">
+    <slot name="main-content"></slot>
   </div>
 </div>
 </template>
 
-<script>
-export default {
-  name: "StaticWrapper"
+<script setup>
+import { ref } from 'vue';
+
+const leftBar = ref(null);
+const onMouseEnter = () => {
+  console.log("enter");
+  console.log(leftBar.value);
+  leftBar.value.classList.add("state-hover");
+}
+
+const onMouseLeave = () => {
+  console.log("leave");
+  leftBar.value.classList.remove("state-hover");
 }
 </script>
 
-<style scoped>
+<style>
 .overlay {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: grid;
-  grid-template-columns: 350px auto 250px;
-  grid-template-rows: 100px auto 100px;
+  grid-template-columns: 100%;
+  grid-template-rows: 100px auto;
 }
 .top{
-  grid-column-start: 1;
-  grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
+  
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100%;
+
+
+  padding: 10px 10%;
+  background: black;
+  color: white;
+}
+.top > *:first-child{
+  text-align: left;
+  margin: 0;
+}
+.top > *:last-child{
+  text-align: right;
+}
+.main{
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 .left{
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  margin: 0 0 0 auto;
-  padding-top: 100px;
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 150px;
+  left: 0;
+
+  transform: translateX(-280px);
+  transition: all 0.25s ease;
 }
-.right{
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-.center{
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-.bottom{
-  grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 3;
-  grid-row-end: 4;
+.left.state-hover{
+  transform: translateX(0);
 }
 </style>

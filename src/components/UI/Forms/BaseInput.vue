@@ -29,6 +29,7 @@ label{
 
     font-family: Bebas;
     font-size: 24px;
+    text-align: center;
 }
 input{
     box-shadow: 5px 5px black;
@@ -39,5 +40,10 @@ input{
     margin-bottom: 0.5em;
 
     font-size: 20px;
+}
+input:active, input:focus{
+    outline: none;
+    border: 3px solid black;
+    font-weight: 600;
 }
 </style>

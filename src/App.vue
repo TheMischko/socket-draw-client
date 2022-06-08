@@ -2,17 +2,20 @@
 <OverlayWrapper>
     <template v-slot:top-content>
       <h1>Sketch.io</h1>
-      <div v-if="user !== null">Welcome {{ user.login.replace(/^\w/, c => c.toUpperCase()) }}</div>
-      <div>Active user count: <span ref="userCountText">1</span></div>
+      <div>
+        <div v-if="user !== null">Welcome {{ user.login.replace(/^\w/, c => c.toUpperCase()) }}</div>
+        <a v-else @click="modalOpen = true">You need to login in order to be able to draw.</a>
+        <div>Active user count: <span ref="userCountText">1</span></div>
+      </div>
     </template>
-    <template v-slot:center-content>
+    <template v-slot:main-content>
       <MainCanvas ref="canvas" @canvas-click="onCanvasClick" @canvas-draw="onCanvasDraw" :settings="drawSettings"/>
     </template>
     <template v-slot:left-content>
       <DrawingSettings @settings-changed="onSettingsChange"/>
     </template>
   </OverlayWrapper>
-  <LoginModal @access-token-acquired="tokenAcquired"/>
+  <LoginModal @access-token-acquired="tokenAcquired" :modalOpen="modalOpen"/>
 </template>
 
 <script>
@@ -39,7 +42,8 @@ export default {
       drawSettings: {
         canDraw: false
       },
-      user: null
+      user: null,
+      modalOpen: true
     }
   },
 
@@ -165,5 +169,15 @@ html {
 }
 *{
   font-size: 20px;
+}
+body{
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+#app{
+  width: 100%;
+  height: 100%;
 }
 </style>

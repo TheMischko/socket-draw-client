@@ -11,12 +11,15 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, defineProps } from 'vue';
 import ModalComponent from '../UI/Modal/ModalComponent';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 
-const isModalOpen = ref(true);
+const props = defineProps({
+    modalOpen: Boolean
+})
+const isModalOpen = ref(props.modalOpen);
 const activePage = ref("loginPage");
 const emits = defineEmits(["accessTokenAcquired"]);
 

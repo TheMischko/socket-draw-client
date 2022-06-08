@@ -14,9 +14,9 @@ export default {
 .card{
   background: white;
   padding: 1em;
-  box-shadow: 2px 2px 4px 2px rgba(0,0,0,0.25);
-  border-radius: 5px;
-  margin: 0.5em;
+  box-shadow: 10px 10px black;
+  border: 4px solid black;
+  margin: 0.25em;
   width: auto;
 }
 </style>

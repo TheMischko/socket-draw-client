@@ -50,9 +50,9 @@ input {
   z-index: 2;
   -webkit-appearance: none;
   width: 36px;
-  height: 32px;
+  height: 36px;
   padding: 0;
-  top: 28px;
+  top: 36px;
   left: -24px;
 }
 input::-webkit-color-swatch-wrapper{
@@ -68,8 +68,8 @@ input::-webkit-color-swatch{
   height: 100%;
 }
 #secondColor{
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: 1px solid lightgray;
   position: relative;
   top: 12px;
@@ -77,10 +77,11 @@ input::-webkit-color-swatch{
 }
 #switchButton{
   position: relative;
-  top: -8px;
+  top: -20px;
   left: -40px;
   background: none;
   border: none;
+  box-shadow: none;
 }
 
 </style>

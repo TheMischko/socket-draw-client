@@ -2,8 +2,10 @@
     <div>
         <p>In order to draw you have to login first.</p>
         <LoginForm ref="loginform" @values-changed="(info) => userInfo = info" @keydown="(e) => e.key === 'Enter' ? onLoginButtonClick() : ''"/>
-        <button class="register-button" @click="$emit('changePage', 'registerPage')">Don't have an account? Register now!</button>
-        <button class="login-button" @click="onLoginButtonClick">Log in!</button>
+        <div class="button-wrapper">
+            <button class="register-button" @click="$emit('changePage', 'registerPage')">Don't have an account? Register now!</button>
+            <button class="login-button" @click="onLoginButtonClick">Log in!</button>
+        </div>
     </div>
 </template>
 
@@ -41,15 +43,24 @@ const onLoginButtonClick = async () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+.button-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 .login-button{
     background-color:forestgreen;
     color: white;
     width: 250px;
+    height: 80px;
 }
 .register-button{
     background-color:mediumblue;
     color: white;
     width: 250px;
+    height: 80px;
 }
 </style>

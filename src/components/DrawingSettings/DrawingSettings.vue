@@ -1,43 +1,3 @@
-<style>
-  .drawing-settings{
-    width: 250px;
-  }
-  .settings-row{
-    margin: 0.5rem 0;
-  }
-  .row{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  label{
-    display: block;
-    width: 100%;
-    text-align: left;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  .slider{
-    display: inline-block;
-    width: 70%;
-  }
-  .value{
-    display: inline-block;
-    width: auto;
-    margin-left: 0.5rem;
-  }
-  .noselect{
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-</style>
-
 <template>
   <CardWrapper>
     <div class="drawing-settings noselect">
@@ -90,3 +50,48 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .drawing-settings{
+    width: 250px;
+  }
+  .settings-row{
+    margin: 0.5rem 0;
+  }
+  .row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  label{
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-family: Bebas;
+  }
+  .slider{
+    display: inline-block;
+    width: 70%;
+  }
+  label span{
+    display: inline-block;
+    width: auto;
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+  }
+  .noselect{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  input{
+    cursor: pointer;
+  }
+</style>

@@ -70,6 +70,7 @@ export default {
     box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.1);
     background-color: white;
     margin: 2px;
+    cursor: pointer;
   }
   .radio-wrapper *{
     pointer-events: none;
