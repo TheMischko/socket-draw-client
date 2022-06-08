@@ -11,6 +11,7 @@
 import RegistrationForm from '../UI/Forms/RegistrationForm';
 import { defineEmits, ref } from 'vue';
 import config from '@/config';
+import { notify } from '@/notification';
 // eslint-disable-next-line
 const emit = defineEmits(['changePage', 'tokenAcquired']);
 // eslint-disable-next-line
@@ -30,9 +31,31 @@ const onRegisterButtonClick = async () => {
     });
 
     if(!res.ok) console.error(`${res.status} - ${res.statusText}`);
+    
+    const parsedRes = await res.json();
+    console.log(parsedRes);
 
-    const {token} = await res.json();
-    emit("tokenAcquired", token);
+    if(parsedRes.status === "error"){
+        switch (parsedRes.err_key){
+            case "WRNG_ARG": {
+                notify("You didn't fill all the inputs.", "danger"); 
+                return;}
+            case "PSW_SHORT": {
+                notify("Your password is too short.", "danger"); 
+                return;}
+            case "MAIL_INVALID": {
+                notify("Your email is not valid.", "danger"); 
+                return;}
+            case "USR_LGN_EXSTS": {
+                notify("User with that login already exists.", "danger"); 
+                return;}
+            case "USR_MAIL_EXSTS": {
+                notify("User with that email already exists.", "danger"); 
+                return;}
+        }
+    }
+
+    emit("tokenAcquired", parsedRes.token);
 }
 </script>
 

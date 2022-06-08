@@ -2,7 +2,7 @@
     <Teleport to='#modal'>
         <Transition name="modal">
             <div class="modal-bg" v-if="isModalOpen">
-                <div class="modal" v-bind="$attrs">
+                <div class="modal" :class="classList">
                     <slot />
                 </div>
             </div>
@@ -14,7 +14,8 @@
 import { defineProps } from 'vue';
 // eslint-disable-next-line
 const props = defineProps({
-    isModalOpen: Boolean
+    isModalOpen: Boolean,
+    classList: Array
 })
 
 </script>

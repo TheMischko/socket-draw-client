@@ -3,27 +3,39 @@
     <template v-slot:top-content>
       <h1>Sketch.io</h1>
       <div>
-        <div v-if="user !== null">Welcome {{ user.login.replace(/^\w/, c => c.toUpperCase()) }}</div>
+        <div v-if="user !== null">Welcome {{ user.login.replace(/^\w/, c => c.toUpperCase()) }}<a @click="logoutHandler">(Logout)</a></div>
         <a v-else @click="modalOpen = true">You need to login in order to be able to draw.</a>
         <div>Active user count: <span ref="userCountText">1</span></div>
+        <div v-if="otherNames.length > 0">
+          Other active users: <span v-for="name of otherNames" :key="name" style="margin-left: 0.25em">{{ name }}</span>
+        </div>
       </div>
     </template>
     <template v-slot:main-content>
       <MainCanvas ref="canvas" @canvas-click="onCanvasClick" @canvas-draw="onCanvasDraw" :settings="drawSettings"/>
     </template>
     <template v-slot:left-content>
-      <DrawingSettings @settings-changed="onSettingsChange"/>
+      <DrawingSettings @settings-changed="onSettingsChange" @clear-canvas="onClearCanvas" @save-canvas="onCanvasSave"/>
     </template>
   </OverlayWrapper>
   <LoginModal @access-token-acquired="tokenAcquired" :modalOpen="modalOpen"/>
+  <NotificationList />
 </template>
 
+<script setup>
+import { ref } from "vue";
+
+const canvas = ref(null);
+const userCountText = ref("");
+</script>
 <script>
 import MainCanvas from "@/components/MainCanvas";
 import DrawingSettings from "@/components/DrawingSettings/DrawingSettings";
 import OverlayWrapper from "@/assets/UI/OverlayWrapper";
 import LoginModal from './components/LoginModal/LoginModal';
 import config from "@/config";
+import NotificationList from "./components/UI/Notifications/NotificationList";
+import { notify } from "./notification";
 export default {
   name: 'App',
 
@@ -31,7 +43,8 @@ export default {
     MainCanvas,
     DrawingSettings,
     OverlayWrapper,
-    LoginModal
+    LoginModal,
+    NotificationList
   },
 
   data: function () {
@@ -43,7 +56,8 @@ export default {
         canDraw: false
       },
       user: null,
-      modalOpen: true
+      modalOpen: true,
+      otherNames: []
     }
   },
 
@@ -60,9 +74,12 @@ export default {
         console.log(ex);
       }
     }
-    this.connection.onopen = function(event) {
-      console.log(event)
-      console.log("Successfully connected to the websocket server...")
+    this.connection.onopen = function() {
+      console.log("Successfully connected to the websocket server...");   
+      const accessToken = localStorage.getItem("accessToken");
+        if(accessToken){
+          this.component.sendInitializeMessage(accessToken);
+        }
     }
   },
 
@@ -92,37 +109,74 @@ export default {
 
     handshake({status, user, token}){
       if(status === "invalid"){
-        //TO-DO wrong login handler
+        notify("Handshake between you and server couldn't be established.", "danger");
         return
       }
       this.drawSettings.canDraw = true;
       this.user = user;
       this.accessToken = token;
+      this.modalOpen = false;
     },
 
-    usersChanged({userCount}){
-      this.$refs.userCountText.innerText = userCount;
+    usersChanged({userCount, names}){
+      this.userCountText.innerText = userCount;
+      if(userCount > 1){
+        const selfIndex = names.findIndex((name) => name === this.user.login);
+        this.otherNames.splice(selfIndex, 1);
+      }
     },
 
     draw(drawData){
-      this.$refs.canvas.drawForeign(drawData);
+      this.canvas.drawForeign(drawData);
     },
 
     imageInit(){
       const image = new Image();
       image.src = `http://${config.hostAddress}/canvas.png`;
       image.onload = () => {
-        this.$refs.canvas.drawInitialImage(image);
+        this.canvas.drawInitialImage(image);
       };
     },
 
     tokenAcquired(token){
+      localStorage.setItem("accessToken", token);
+      this.sendInitializeMessage(token);
+    },
+
+    sendInitializeMessage(token){
       this.connection.send(JSON.stringify({
         event: "initialize",
         data: {
           token
         }
       }));
+    },
+
+    logoutHandler(){
+      localStorage.removeItem("accessToken");
+      this.accessToken = null;
+      location.reload();
+    },
+
+    onClearCanvas({foreign}){
+      if(!foreign){
+        this.connection.send(JSON.stringify({
+          event: "onClearCanvas",
+          data: {
+            bearer: this.accessToken,
+          }
+      }));
+      }
+      this.canvas.clearCanvas();
+    },
+
+    onCanvasSave(){
+      const download = document.createElement('a');
+      download.href = `http://${config.hostAddress}/canvas.png`;
+      download.download = "canvas.png";
+      document.body.appendChild(download);
+      download.click();
+      document.body.removeChild(download);
     }
   }
 }
@@ -143,6 +197,14 @@ h1{
   font-family: Bebas;
   font-size: 64px;
   
+}
+
+a{
+  cursor: pointer;
+}
+
+a:hover{
+  text-decoration: underline;
 }
 
 button{

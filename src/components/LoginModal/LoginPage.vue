@@ -13,27 +13,52 @@
 import { defineEmits,  ref } from 'vue';
 import LoginForm from '../UI/Forms/LoginForm';
 import config from '@/config';
+import { notify } from '@/notification';
 // eslint-disable-next-line
 const emit = defineEmits(['changePage', 'tokenAcquired']);
 // eslint-disable-next-line
 let userInfo = ref({});
 
 const onLoginButtonClick = async () => {
-    const res = await fetch(`http://${config.hostAddress}/users/login`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            login: userInfo.value.login,
-            password: userInfo.value.password,
-        })
-    });
+    if(!userInfo.value.login){
+        notify("You didn't fill up login input.", "danger")
+        return;
+    }
+    if(!userInfo.value.password){
+        notify("You didn't fill up password input.", "danger")
+        return;
+    }
+    try{
+        const res = await fetch(`http://${config.hostAddress}/users/login`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                login: userInfo.value.login,
+                password: userInfo.value.password,
+            })
+        });
 
-    if(!res.ok) console.error(`${res.status} - ${res.statusText}`);
+        if(!res.ok) console.error(`${res.status} - ${res.statusText}`);
 
-    const {token} = await res.json();
-    emit("tokenAcquired", token);
+        const parsedResponse = await res.json();
+        if(parsedResponse.status === "error"){
+            if(parsedResponse.err_key === "WRNG_PSW"){
+                notify("You entered wrong password", "danger");
+            } else if(parsedResponse.err_key === "WRNG_LOGIN"){
+                notify("User with that login couldn't be found.", "danger");
+            } else if(parsedResponse.err_key === "WRNG_ARG"){
+                notify("You didn't fill up all the inputs.", "danger");
+            }
+            return;
+        }
+        notify("You have been logged in.", "primary");
+        emit("tokenAcquired", parsedResponse.token);
+
+    } catch(err) {
+        notify("Connection lost during logging in.", "danger");
+    }
 }
 
 </script>

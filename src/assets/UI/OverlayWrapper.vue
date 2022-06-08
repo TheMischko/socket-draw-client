@@ -17,13 +17,10 @@ import { ref } from 'vue';
 
 const leftBar = ref(null);
 const onMouseEnter = () => {
-  console.log("enter");
-  console.log(leftBar.value);
   leftBar.value.classList.add("state-hover");
 }
 
 const onMouseLeave = () => {
-  console.log("leave");
   leftBar.value.classList.remove("state-hover");
 }
 </script>

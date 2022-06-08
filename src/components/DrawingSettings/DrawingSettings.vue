@@ -13,6 +13,14 @@
         <label>Color:</label>
         <ColorPicker ref="colorInput" @value-changed="onChange"></ColorPicker>
       </div>
+      <div class="settings-row row">
+        <label>Clear canvas</label>
+        <button @click="onClearCanvasClick">Clear!</button>
+      </div>
+      <div class="settings-row row">
+        <label>Save to image</label>
+        <button @click="onSaveCanvasClick">Save!</button>
+      </div>
     </div>
   </CardWrapper>
 </template>
@@ -31,7 +39,9 @@ export default {
     }
   },
   emits: {
-    "settings-changed": null
+    "settings-changed": null,
+    "clear-canvas": null,
+    "save-canvas": null
   },
   mounted() {
     this.onChange();
@@ -46,6 +56,12 @@ export default {
 
       this.$refs.brushSizeText.innerText = this.settings.brushSize;
       this.$emit('settings-changed', this.settings);
+    },
+    onClearCanvasClick(){
+      this.$emit('clear-canvas', {foreign: false});
+    },
+    onSaveCanvasClick(){
+      this.$emit('save-canvas');
     }
   }
 }

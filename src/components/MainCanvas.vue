@@ -18,7 +18,7 @@ canvas{
 
 <template>
   <div>
-    <canvas @click="canvasClick" @mousedown="drawStart" ref="canvas"></canvas>
+    <canvas @click="canvasClick" @mousedown="drawStart" ref="canvas" @resize="onResizeHandler"></canvas>
   </div>
 </template>
 
@@ -31,7 +31,6 @@ export default {
   },
   data(){
     return {
-      name: "Name",
       coord: {
         x: 0,
         y: 0
@@ -42,7 +41,6 @@ export default {
   },
   mounted() {
     this.ctx = this.$refs.canvas.getContext('2d');
-    window.addEventListener('resize', this.resize);
     window.addEventListener('mouseup', this.drawStop);
     this.resize();
   },
@@ -67,8 +65,6 @@ export default {
       this.ctx.canvas.height = 980;
     },
     reposition(event) {
-      console.log(event.clientX , this.$el.offsetLeft);
-      console.log(event.clientY, this.$el.offsetTop);
       this.coord.x = event.clientX - this.$el.offsetLeft;
       this.coord.y = event.clientY - this.$el.offsetTop;
     },
@@ -114,6 +110,14 @@ export default {
     drawInitialImage(image) {
       void(image);
       this.ctx.drawImage(image, 0, 0, 1920, 980);
+    },
+
+    onResizeHandler() {
+      console.log("resize");
+    },
+
+    clearCanvas(){
+      this.ctx.clearRect(0,0,1920,980);
     }
   }
 }

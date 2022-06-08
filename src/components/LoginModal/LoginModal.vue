@@ -1,5 +1,5 @@
 <template>
-    <ModalComponent :is-modal-open="isModalOpen" class="login-modal">
+    <ModalComponent :is-modal-open="modalOpen" :classList="['login-modal']">
         <h1>Online Drawing</h1>
         <div v-if="activePage === 'loginPage'" class="content">
             <LoginPage @change-page="changePage" @token-acquired="tokenAcquired"/>
@@ -15,11 +15,10 @@ import { ref, defineEmits, defineProps } from 'vue';
 import ModalComponent from '../UI/Modal/ModalComponent';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
-
+// eslint-disable-next-line
 const props = defineProps({
     modalOpen: Boolean
-})
-const isModalOpen = ref(props.modalOpen);
+});
 const activePage = ref("loginPage");
 const emits = defineEmits(["accessTokenAcquired"]);
 
@@ -28,7 +27,6 @@ const changePage = (page) => {
 }
 
 const tokenAcquired = (token) => {
-    isModalOpen.value = false;
     emits("accessTokenAcquired", token);
 }
 
