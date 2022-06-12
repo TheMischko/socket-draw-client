@@ -187,6 +187,11 @@ const websocketHandlers = {
   src: url("../public/fonts/Bebas-Regular.otf");
 }
 
+@font-face {
+  font-family: Loveyou;
+  src: url("../public/fonts/loveyou.otf");
+}
+
 h1{
   display: block;
   width: 100%;
