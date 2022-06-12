@@ -108,7 +108,6 @@ export default {
      * @param image {HTMLImageElement}
      */
     drawInitialImage(image) {
-      void(image);
       this.ctx.drawImage(image, 0, 0, 1920, 980);
     },
 

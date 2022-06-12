@@ -14,8 +14,8 @@ export default {
   },
   data() {
     return {
-      color1: "#FFFFFF",
-      color2: "#000000"
+      color1: "#000000",
+      color2: "#FFFFFF"
     }
   },
   mounted() {
