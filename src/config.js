@@ -1,5 +1,5 @@
 export default {
-  hostAddress: "localhost:5001",
+  hostAddress: "io-socket-draw.herokuapp.com",
   localhost: "localhost:5001",
   heroku: "io-socket-draw.herokuapp.com"
 };

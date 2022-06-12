@@ -159,7 +159,7 @@ export default {
     },
 
     onClearCanvas({foreign}){
-      if(!foreign){
+      if(foreign == false){
         this.connection.send(JSON.stringify({
           event: "onClearCanvas",
           data: {
